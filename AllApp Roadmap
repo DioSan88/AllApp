@@ -1,0 +1,132 @@
+# 🚀 AllApp Development Roadmap
+
+A decentralized, verified, privacy-first app for work, trade, civic services, education, and collaboration — powered by the Copin currency.
+
+---
+
+## 📌 Milestone 0 – Strategy & Foundation
+
+- [ ] Define tech stack and app architecture  
+- [ ] Design data models (users, jobs, projects, wallet, ratings, etc.)  
+- [ ] Create UI wireframes for all major modules  
+- [ ] Define MVP scope and non-MVP feature backlog  
+
+---
+
+## 🔐 Milestone 1 – Identity & Verification System
+
+- [ ] Build registration/authentication system  
+- [ ] Integrate ID verification (CPC: ID + face scan)  
+- [ ] Build Civic Awareness Test engine  
+- [ ] Implement role-based access control system (Unverified, Basic, Full, Regulated)  
+- [ ] Build profile system with privacy controls  
+- [ ] Create avatar module (main avatar + 10 game/VR avatars)  
+
+---
+
+## 🪙 Milestone 2 – Copin Economy System
+
+- [ ] Define Copin value logic (₡1 = avg of $10/€10/CHF10)  
+- [ ] Implement in-app wallet system  
+- [ ] Send/receive Copin functionality with 1% fee  
+- [ ] Add transaction history + export function  
+- [ ] Enable basic fiat withdrawal logic (USD, EUR, CHF)  
+- [ ] Add optional cloud wallet backup  
+
+---
+
+## 💼 Milestone 3 – Jobs, Projects, Groups
+
+### Jobs
+- [ ] Post job (fields: name, sector, funding, skills, etc.)  
+- [ ] Job lifecycle (in progress, completed, etc.)  
+- [ ] Allow reviews **only after verified interaction**
+
+### Projects
+- [ ] Create project (public/private)  
+- [ ] Add milestones, funding goals, sections  
+- [ ] Category-based commenting system  
+- [ ] Block/report flow for chat misuse  
+- [ ] Status management (finished, incomplete, cancelled)
+
+### Groups
+- [ ] Create/join group flow  
+- [ ] Add messaging, file sharing, role control (member, mod, admin)
+
+---
+
+## 📲 Milestone 4 – Communication & Calendar
+
+- [ ] Encrypted chat system (private + group)  
+- [ ] Project/job-specific chat threads  
+- [ ] Role-based identity reveal logic  
+- [ ] System notification engine  
+- [ ] Calendar integration (jobs, workshops, deadlines, reminders)
+
+---
+
+## 🗂️ Milestone 5 – Sectors, Map & Public Services
+
+- [ ] Create sector taxonomy with metadata  
+- [ ] Tag users, jobs, projects, posts by sector  
+- [ ] Add sector filtering to feed and map  
+- [ ] Build location-based map (jobs, services, attractions, institutions)  
+- [ ] Build verified public services directory  
+- [ ] Add data contribution & trust point reward system
+
+---
+
+## 🎓 Milestone 6 – Studybench & Learning
+
+- [ ] Build Studybench UI  
+- [ ] Add tutorial & workshop modules  
+- [ ] Create certification engine  
+- [ ] Add civic refresher logic  
+- [ ] Add personal note library + progress tracking
+
+---
+
+## 🧰 Milestone 7 – Workbench, Backpack & Business Tools
+
+- [ ] Build Workbench with document + workflow templates  
+- [ ] Build Backpack (wallet, files, tickets, licenses)  
+- [ ] Add Company Dashboard UI  
+- [ ] Enable public-facing service/storefront pages  
+
+---
+
+## 🧪 Milestone 8 – Testing & Launch
+
+- [ ] Internal testing and bug hunt  
+- [ ] QA all modules and permission flows  
+- [ ] Add user documentation and civic guide  
+- [ ] Soft launch (small user base or single region)
+
+---
+
+## 🌐 Milestone 9 – Scaling & Governance
+
+- [ ] DAO-style voting for features and funds  
+- [ ] Public Copin transaction & usage ledger  
+- [ ] Enable community leadership roles  
+- [ ] Prototype Copin debit card  
+- [ ] Plan for inter-app avatar/game integrations  
+
+---
+
+## 🏷️ Suggested GitHub Labels
+
+- `epic`: major module (Wallet, Jobs, Studybench, etc.)
+- `mvp`: core functionality needed for soft launch
+- `frontend`: UI development
+- `backend`: API, logic, storage
+- `verification`: ID & trust system
+- `wallet`: anything Copin related
+- `enhancement`: non-MVP upgrade
+- `bug`: QA task
+- `help wanted`: open to contributors
+
+---
+
+_This roadmap reflects the current planned architecture for AllApp and will evolve as features are completed and community input is gathered._
+
