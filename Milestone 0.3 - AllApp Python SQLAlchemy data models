@@ -1,0 +1,213 @@
+Below are the **full Python SQLAlchemy data models** for AllApp, including:  
+- `User`  
+- `Wallet` and `Transaction`  
+- `Job`  
+- `Project`, `ProjectMember`, `ProjectComment`  
+- `Rating`  
+- Base class
+
+---
+
+### 📦 `base.py` (Base Class for Models)
+
+```python
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+```
+
+---
+
+### 👤 `user.py`
+
+```python
+from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Integer, ARRAY
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+from datetime import datetime
+import uuid
+
+from .base import Base
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    email = Column(String, unique=True, index=True)
+    hashed_password = Column(String, nullable=False)
+
+    nickname = Column(String, unique=True)
+    real_name = Column(String, nullable=True)
+    avatar_url = Column(String)
+    civic_test_passed = Column(Boolean, default=False)
+    is_verified = Column(Boolean, default=False)
+    is_pro_user = Column(Boolean, default=False)
+
+    trust_score = Column(Integer, default=0)
+    sector_tags = Column(ARRAY(String))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    wallet = relationship("Wallet", uselist=False, back_populates="user")
+    ratings_received = relationship("Rating", back_populates="target_user")
+```
+
+---
+
+### 💳 `wallet.py`
+
+```python
+from sqlalchemy import Column, DECIMAL, String, ForeignKey, DateTime
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+from datetime import datetime
+import uuid
+
+from .base import Base
+
+class Wallet(Base):
+    __tablename__ = "wallets"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    balance = Column(DECIMAL, default=0.0)
+
+    user = relationship("User", back_populates="wallet")
+    transactions = relationship("Transaction", back_populates="wallet")
+
+
+class Transaction(Base):
+    __tablename__ = "transactions"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    wallet_id = Column(UUID(as_uuid=True), ForeignKey("wallets.id"))
+    sender_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    receiver_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+
+    amount = Column(DECIMAL, nullable=False)
+    fee = Column(DECIMAL, default=0.01)
+    type = Column(String)
+    description = Column(String)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+
+    wallet = relationship("Wallet", back_populates="transactions")
+```
+
+---
+
+### 💼 `job.py`
+
+```python
+from sqlalchemy import Column, String, Text, DECIMAL, DateTime, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+from datetime import datetime
+import uuid
+
+from .base import Base
+
+class Job(Base):
+    __tablename__ = "jobs"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    title = Column(String)
+    description = Column(Text)
+    sector = Column(String)
+    required_skills = Column(ARRAY(String))
+    location = Column(String)
+    status = Column(String, default="open")  # open, in_progress, completed, cancelled
+
+    creator_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    worker_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+
+    payment_amount = Column(DECIMAL)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime)
+
+    creator = relationship("User", foreign_keys=[creator_id])
+    worker = relationship("User", foreign_keys=[worker_id])
+```
+
+---
+
+### 🛠️ `project.py`
+
+```python
+from sqlalchemy import Column, String, Text, Boolean, DateTime, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+from datetime import datetime
+import uuid
+
+from .base import Base
+
+class Project(Base):
+    __tablename__ = "projects"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name = Column(String)
+    description = Column(Text)
+    sector = Column(String)
+    is_public = Column(Boolean, default=True)
+    status = Column(String, default="ongoing")  # ongoing, completed, cancelled
+
+    creator_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    members = relationship("ProjectMember", back_populates="project")
+    comments = relationship("ProjectComment", back_populates="project")
+
+
+class ProjectMember(Base):
+    __tablename__ = "project_members"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    project_id = Column(UUID(as_uuid=True), ForeignKey("projects.id"))
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    role = Column(String)  # member, moderator, admin
+
+    project = relationship("Project", back_populates="members")
+    user = relationship("User")
+
+
+class ProjectComment(Base):
+    __tablename__ = "project_comments"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    project_id = Column(UUID(as_uuid=True), ForeignKey("projects.id"))
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    category = Column(String)  # e.g., description, tasks
+    content = Column(Text)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    project = relationship("Project", back_populates="comments")
+```
+
+---
+
+### ⭐ `rating.py`
+
+```python
+from sqlalchemy import Column, Integer, Text, String, DateTime, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+from datetime import datetime
+import uuid
+
+from .base import Base
+
+class Rating(Base):
+    __tablename__ = "ratings"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    source_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+    target_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+
+    rating = Column(Integer)
+    review = Column(Text)
+    context = Column(String)  # "job", "project", etc.
+    context_id = Column(UUID(as_uuid=True))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    target_user = relationship("User", back_populates="ratings_received")
+```
+
