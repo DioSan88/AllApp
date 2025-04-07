@@ -1,0 +1,137 @@
+# 🧠 AllApp – Unity UI Powered by Python Backend
+
+This project defines the Unity-based interface for **AllApp**, a civic-first platform that connects to a **Python-powered backend** using FastAPI and WebSockets. Unity handles the interface, while all logic, data processing, and security flows are handled in Python.
+
+---
+
+## 🎯 Project Goal
+
+Create a scalable and ethical UI using **Unity** that communicates with:
+- A **FastAPI** backend for user, jobs, projects, wallet, and ratings
+- A **Python-based WebSocket server** for real-time chat and events
+- Python-managed background tasks and verification logic
+
+---
+
+## 🐍 Backend Responsibilities (Python)
+
+| Unity Screen     | Python Endpoint / Functionality           |
+|------------------|-------------------------------------------|
+| Login/Auth       | `POST /auth/login` – JWT auth             |
+| Profile Info     | `GET /profile/me`                         |
+| Copin Wallet     | `GET /wallet` / `POST /wallet/send`       |
+| Job Board        | `GET /jobs` / `POST /jobs/{id}/apply`     |
+| Projects         | `GET /projects` / `POST /projects/{id}`   |
+| Ratings          | `POST /ratings` – context-based reviews   |
+| Chat             | WebSocket (FastAPI real-time backend)     |
+
+---
+
+## 🧱 Project Structure
+AllAppUnity/ ├── Assets/ │ ├── Scenes/ # Unity UI scenes (Login, Home, Profile, Wallet) │ ├── Scripts/ │ │ ├── PythonTest/ # Python mocks to test API endpoints │ │ ├── Models/ # JSON parsing & data sync from Python │ └── UI/ # Panels, Templates, Common Components ├── Python/ │ ├── test_api_requests.py │ ├── config.py ├── README.md
+
+
+---
+
+## 🔌 Example Python Endpoint Interaction (Simulated in Python)
+
+### 🔐 Authenticate with Python API
+
+```python
+import requests
+
+BASE_URL = "http://localhost:8000"
+
+def login(email, password):
+    response = requests.post(f"{BASE_URL}/auth/login", json={
+        "email": email,
+        "password": password
+    })
+    if response.status_code == 200:
+        return response.json()["access_token"]
+    else:
+        raise Exception(f"Login failed: {response.text}")
+
+token = login("user@example.com", "securepassword123")
+print("Access Token:", token)
+
+
+🧑‍💼 Get Profile Info (Python)
+def get_profile(token):
+    headers = {"Authorization": f"Bearer {token}"}
+    response = requests.get(f"{BASE_URL}/profile/me", headers=headers)
+    print(response.json())
+
+get_profile(token)
+
+💳 Send Copins from Wallet (Python)
+def send_copins(token, to_user_id, amount):
+    headers = {"Authorization": f"Bearer {token}"}
+    payload = {
+        "receiver_id": to_user_id,
+        "amount": amount
+    }
+    response = requests.post(f"{BASE_URL}/wallet/send", json=payload, headers=headers)
+    print(response.status_code, response.json())
+
+send_copins(token, "target-user-uuid", 5)
+
+📄 Post a Rating (Python)
+def rate_user(token, target_user_id, context, context_id, rating, review):
+    headers = {"Authorization": f"Bearer {token}"}
+    payload = {
+        "target_user_id": target_user_id,
+        "rating": rating,
+        "review": review,
+        "context": context,
+        "context_id": context_id
+    }
+    response = requests.post(f"{BASE_URL}/ratings", json=payload, headers=headers)
+    print(response.status_code, response.json())
+
+rate_user(token, "worker-user-id", "job", "job-id", 5, "Excellent work!")
+
+🧪 Local Backend Setup for Unity Devs
+1. Clone the backend:
+git clone https://github.com/your-org/allapp-backend.git
+cd allapp-backend
+
+2.Create .env and run the server:
+uvicorn app.main:app --reload --port 8000
+
+3. Optional: Run background jobs
+celery -A app.workers worker --loglevel=info
+
+4.Optional: Enable WebSockets for chat
+# Built into FastAPI with endpoint: /ws/chat/{room_id}
+
+✅ Unity Team To-Do
+ Implement login using auth/login via Python mock or backend
+
+ [ ]Display job and profile data from backend
+
+ [ ]Add wallet UI + transaction history
+
+ [ ]Display ratings and reviews after jobs
+
+ [ ]Connect to WebSocket for real-time chat updates
+
+🔐 Security Note
+All Unity requests must include the token from the Python login. Never expose private endpoints or tokens in client UI.
+
+📄 License
+Open-source under MIT. Python backend + Unity frontend. Built with civic integrity.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
